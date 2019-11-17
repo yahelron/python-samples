@@ -53,4 +53,9 @@ if not os.path.exists(directory):
 myfile = open(directory+"\\name.txt", 'w+',  encoding='utf-8')
 myfile.write("Yahel")
 
+#########################
+# loop using a function and a sentinel
+with open ("file.txt", 'r') as myfile:
+    for line in iter(myfile.readline,''):
+        print(line)
 
