@@ -1,0 +1,274 @@
+minikube start --vm-driver="virtualbox"
+minikube stop/start
+pass the version of Kubernetes that you want to run when start minikuebe: --kubernetes-version 
+
+kubectl run  mynginx1 --image=nginx --port=80
+show deployments:
+kubectl get deployments
+kubectl get deployments -o wide
+
+kubectl get pods
+show all pods into json:
+kubectl get pods -o json
+kubectl expose deployment mynginx2 --type=NodePort
+minikube service nginx1
+kubectl get services
+show/connect in browser
+minikube service mygninx2
+see all what was done:
+kubectl get all
+kubectl get deploy/mynginx2 -o yaml
+show the yaml file of mynginx2 deployment:
+combine Deployment and service yml file:
+kubectl create -f mynginx2.yml
+
+show replica set:
+kubectl get rs
+scale number of replicas for the deployment to 3:
+kubectl scale --replicas=3 deploy/mynginx2
+kubectl get pods  - to see the update in number of pods
+
+
+kubectl get nodes
+kubectl expose deployment hw --type=NotePort
+
+Labels
+kubectl get pods --show-labels
+change the labels:
+kubectl get pods –show-labels
+kubectl label po/helloworld app=hellowrldapp –overerite
+search in labels production pods:
+kubectl get pods  --selector env=production -- show-labels
+kubectl get pods  --selector ‘release-version in (1.0,2.0)’
+kubectl get pods -l = stagin
+kubectl delete pods -l dev-lead=karthik
+create from yml file:
+kubectl create -f file.yaml
+update of the same implementation:
+kubectl apply -f file.yaml
+flags:
+--record   will show us changes, good for in-place upgrade
+issues (sometimes usufull in case of yaml issues):
+kubectl convert -f guestbook.yaml | kubectl create -f -
+delete pods:
+kubectl delete pods -l dev-lead=Karthik
+
+in-place upgrade:
+change one image with another (actual running deployment):
+kubectl set image deployment/navbar-deplyment helloworld=karthequian/helloworld:blue 
+see the changes in deployment:
+kubectl rollout history deployment/deply-name
+undo to this deployment:
+kubectl rollout undo deployment/ navbar-deplyment
+or change to specific revision:
+kubectl rollout undo deployment/ navbar-deployment --to-revision=1.3
+
+exec – access to a pod:
+kubectl exec -it pod-name /bin/bash
+in case of multiple containers in a pod:
+kubectl get pods  check the exact container you need
+kubectl exec -it mynginx2-7b6f9d5cdb-ffbbc -c mynginx2 /bin/bash
+Deemons
+kubectl get daemonsets
+
+debug
+kubectl describe deployment bad-helloworld-deployment
+kubectl describe po/bad-helloworld-deployment-7bb
+kubectl describe services example-service
+
+or 
+kubectl get deployments
+kubectl get pods
+kubectl logs xxx
+
+Plugins:
+minikube addons list
+run the dashboard plugin:
+dashboard - UI
+minikube dashboard
+enable heapster plugin to see CPU and ram usuage in the cluster:
+minikube addons enable heapster
+
+Security & secrets
+to encrypt a key/password in a yamel file:
+cubectl create secret generic apikey --from-literal=api_key=12345678
+cubectl get secrets
+show how the key loos inside the kamel file:
+kubectl get secret apikey -o yaml
+decode of base64 connection string:
+how to use this key:
+inside the yamel file we put something like this:
+ 
+Other use case:
+echo c2VydmVyPTEyNy4wLjAuMTt1aWQ
+9cm9vdDtwd2Q9MTIzNDU7ZGF0YWJhc2U9dGVzdA== | base64 –decode
+Form the yamel file:
+ 
+We could see this in the env of the container.(env | grep MYSQL)
+
+
+Namespaces
+סביבה נפרדת, בד"כ יוצרים הפרדה בין 
+dev, prod, qa
+create:  
+kubectl create namespace MyQA
+Delete:
+kubectl delete namespace MyQA
+resorce to a specific namespace:
+-n namespace-MYQA
+view current namespaces:
+kubectl get namespaces
+
+CAdvisor
+an open source resource usage collector that was built for containers. provides overall machine usage my analyzing the root container on the machine.
+
+Prometheus
+Time series database with query lang to send monitoring or apps metrics data.
+usually cAdvison, heapster and Prometheus are lined to Grafana. Grafana will visualize the metric data.
+
+
+https://github.com/kelseyhightower/kubernetes-the-hard-way
+https://www.chcf.io
+www.meetup.com/pro/cncf
+cluster installation and tools:
+kubeadm 
+allow to create cluster 
+1.	download docker, kubeadm, kubelet, kubectl
+2.	install the kubeadn on all the host that you want in the cluster
+3.	on master node run kubeadm init command. you will get a tocken, keep it safe.
+4.	set the network. kubeadm supports only ContainerNetworkInterficae (CNI) and doesn’t support kubenet. run kubectl apply command to add most of network plugins.
+5.	when network is ready run kubeadm join command on the worker nodes using the taken (3).
+6.	make sure if it supports multi-master instances.
+Kops
+create a full production cluster in AWS also can in gce and vmware.
+
+Federation key Features
+•	sync resources across clusters
+•	cross cluster discovery (one dns)
+•	highly available clusters in different regions
+kubefed
+toll to get federation going. you can add your existing clusters to kubefed as federated clusters by passing the cluster config to each of them. 
+Kompose Tool
+convert docker compose files to Kubernetes objects.
+Helm
+A package management system is a collection of tools that provides a consistent method of installing, upgrading and removing software on your system
+https://helm.sh/ - about helm
+https://github.com/helm/helm/releases  (download)
+Files
+templates/: This directory contains template files that are
+combined with configuration values and rendered into
+Kubernetes manifests.
+Chart.yaml: A YAML file with metadata about the chart, such as
+chart name and version, maintainer information, a relevant
+
+website, and search keywords.
+values.yaml: A YAML file of default configuration values for the chart.
+HELM – repository
+A chart repository is an HTTP server that houses an index.yaml file and optionally some packaged charts.
+We can use ChartMuseum which is an open-source, which is an easy to deploy, Helm Chart Repository server. https://chartmuseum.com/ 
+how to add a repository:
+helm repo add bitnami https://charts.bitnami.com/bitnami
+Commands
+helm init - setup helm with our cluster.
+$ helm repo update - sync all helm charts info.
+$ helm repo list - By default helm uses stable repo, we can see
+which repos are available using list.
+$ helm list - show you a list of all deployed releases.
+$ helm install –name <name> <chart> - install a chart
+$ helm delete <chart name>– delete a chart
+$ helm create <chart name> - create a chart
+$ helm package <chart name> - package a chart into tar.gz
+files location - %APPDATA%\helm and/or %TEMP%\helm
+HELM – Creating a chart
+The template makes use of the Helm-specific objects Chart.yaml and values.yaml  • Chart.yaml provides metadata about the chart to your definitions such as the name, or version.  • values.yaml object is a key element of Helm charts, used to expose configuration that can be set at the time of deployment.  • The defaults for this object are defined in the values.yaml file
+Helm – build actual – Yahel
+-	Helm create myname
+-	add yaml file to template folder
+-	helm template update ./myname
+-	helm install myname ./myname  
+-	helm uninstall myname
+
+Network / Services
+Services are of 3 types: 
+ClusterIP, NodePort  used for applications internal infra
+Loadbalancers  For applications that you want to expose externally
+ingress –  
+ngress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource
+kubectl get ing
+ENVOY – simple service proxy for cloud native app
+kubectl get services --all-namespaces
+network layer – look at calico or flannel
+minikube service -n heptio-contour contour --url
+Add load balancer (LB)
+kubectl expose pod/POD-NAME --port 8088 --type LoadBalancer
+or 
+kubectl expose deployment my-nginx --port=8088 --type LoadBalancer
+Monitoring
+Prometheus
+Storage
+ROOK
+CONTAINERD
+logs
+Log sheeper – fluentd
+Application tracing – Jaeger and OpenTracing
+Security
+TUF – a framework
+Notary – use TUF to secure containers.
+Clair to scan a container.
+Istio – connect manage and secure macroservices.
+to do:
+test helm
+
+
+Namspaces
+kube-public  - פתוח לכל מקום בקלסטר
+kube-node-lease – for kubelet, (the one that check the healf of the containers)
+
+kubectl --namespace=default get nodes
+
+Pods – מכיל מספר קונטינרים מסוגים שונים
+replicasets – דואג לשכפל את הפודים לפי מספר הפעמים שקבענו.
+service – מפשט את התקשורת לדוגמא בין פודים. דומה לראוטר\חומת אש וכדו'
+cluster’s desired state
+spec – what I want to do (nginx)
+status – how to do it in reality.
+
+
+kubectl get deployment,service,pod superset -o yaml –export
+
+
+
+Troubleshooting
+
+check if port is open
+cat < /dev/tcp/127.0.0.1/22
+
+Download file with curl:
+curl -o filename https://x.x.x.x:/filname
+
+View all containers within a pod (multi containers pod):
+Connect second container in a pod
+kubectl get pod pod_name --output=yaml (look for relevant container name)
+
+kubectl exec -it pod-name -c container-name /bin/bash
+
+view IP address of all pods:
+kubectl get pods --output=wide
+
+
+k3s – full prod k8s
+kind – create very fast your dev cluster
+kind create cluster 
+edit deployment:
+kubectl edit deployment guestbook-v1
+
+Network:
+https://github.com/IBM/kubernetes-networking
+see ip add:
+kubectl get pods -o wide
+look at the network service:
+kubectl describe service redis-master
+
+nslookup command from within the container
+kubectl exec -it guestbook-v1-6cb588d958-c6k9l -- nslookup redis-master
+kubectl exec -it guestbook-v1-6cb588d958-c6k9l -- cat /etc/resolv.conf
