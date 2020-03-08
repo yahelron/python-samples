@@ -1,0 +1,171 @@
+Run containers:
+Docker run image
+Run interactive and see the output in your screen:
+docker run -it busybox sh
+docker run fe1f71042611
+docker stop 793c526ec6cb
+docker start 793c526ec6cb
+docker kill 793c526ec6cb
+Run web server and map ports
+docker run -dit --name web-server -p 8080:80 httpd
+Run in the background:
+docker run -t -d 775349758637
+delete the container when run ends:
+docker run --rm
+run few commands:
+docker run -it ubunto bash -c “sleep 4; mkdir yahel; echo all done”
+
+Take image from docker repository (imaged named busybox):
+Run command inside a container:
+docker exec 65cfc5ee1b70 mkdir newfolder
+docker exec -it 793c526ec6cb bash
+
+Images 
+Save a container to an image:
+docker commit 70767f8d2aaf nginx:toyota_1.1
+tag a name to the images:
+docker tag imagename your-name
+docker pull busybox
+Image:
+show the images exist in the docker:
+docker images
+delete image:
+docker rmi image_name
+delete all images:
+docker image prune -a
+delete all:
+docker system prune -a
+search images:
+docker search ubuntu
+login:
+sudo apt install gnupg2 pass (for bug fix to use the pass over cli)
+docker login
+
+show resources:
+docker ps
+show resources use to run lately:
+docker ps -a 
+docker ps -a  (shows last container)
+
+Copy files
+from host to a container:
+docker cp [OPTIONS] SRC_PATH|- CONTAINER:DEST_PATH
+sudo docker cp myname.txt aaec7abaa6df:/.
+Copy files from container to host 
+docker cp <containerId>:/file/path/within/container /host/path/target
+sudo docker cp aaec7abaa6df:/test.txt .
+
+debug
+docker logs ContainName
+
+run limits:
+docker run --memory maximum allowed memory image-name command
+docker run –chu-shared relative to other comtiantrs
+Install:
+Network:
+Show ports of a container:
+Docker port container
+See the network interfaces: 
+Docker network ls
+ 
+Bridge – network use by containers
+Host – when you want container to have network with no isolation at all.
+None – no networking for container. 
+Create new network interface:
+Docker network create int_name
+Use network interace:
+Docker run --net int_name .
+Connect running container:
+Docker network connect int_name container
+Legacy Linking connection:
+Links all ports but works only one way.
+docker run –rm -it –link container1 --name container2 image_name
+Bridge
+apt-get bridge-utils
+brctl show
+iptables -n -L -t nat
+
+Data / Folders /file Sharing / Volumes
+sharing Data between host and a container:
+in host:
+mkdir share
+run the container (-v is volume):
+docker run --rm -it --name yahelvol2 -v  /share:/shared-folder ubuntu bash
+check shared-folder in the container
+Sharing Data between containers (ephemeral):
+the one that share (server1):
+docker run --rm -it --name server1 -v  /shared-folder ubuntu bash
+the one that connect to server1:
+docker run --rm -it --volumes-from server1 --name client1 ubuntu bash
+folder is ephemeral, will delete when last container used it will be stopped.
+
+
+Build an image – Dockerfile
+build the image:
+docker build -t image_name  .
+How to – write a Dockerfile:
+vi Dockerfile
+FROM: the image to start running from (first command in the file)
+FROM ubunto:16.04
+MAINTAINER – the author of the dockerfile
+RUN – command to run in image when it being built
+RUN apt-get -y update
+ADD – adds local files / can uncompress archive files / can download from url
+ADD project.tar.gz /install/
+ADD run.sh  /run.sh
+ENV – sets variables
+ENV DB_HOST=oracle10.url.com
+ENTRYPOINT – specifies the start of the command to run
+CMD – specifies the while command to run (run when the container is loading)
+CMD ["nano", "/notes.txt"]
+EXPOSE – maps a port into the container
+VOLUME – set shared or ephemeral vols
+WORKDIER – sets the directory toe container start in
+USER – set the user the container will run as
+how to build:
+https://docs.docker.com/engine/reference/builder/  
+Backup
+Your own repository (registry)
+Create a server container to save images:
+docker run -d -p 5000:5000 --restart-always --name registry registry:2
+copy an image:
+docker tag ubuntu:14.04 localhost:5000/mycompany/my-ubuntu:5
+docker push localhost:5000/mycompany/my-ubuntu:5
+more conf (security and so): https://docs.docker.com/registry/ 
+https://docs.docker.com/install/linux/docker-ce/ubuntu/
+
+Backup images with Docker save
+docker save -o myimages.tar.gz image1 image2 image3
+Restore images with Docker load
+docker load -I my-images.tar.gz
+Copy image to dockerhub (docker push)
+docker tag  myimage_name yahel777/myapp_name:v1
+docker login
+docker push yahel777/myapp_name:v1
+
+
+Docker Compose
+יריץ דוקר כסביבה אחת כאשר התקשורת בין הקונטיינרים תהיה נגישה לפי הצורך. 
+default file name: docker-compose.yml
+  
+How to run
+docker-compose up
+
+docker-compose up --force-recreate --build
+docker image prune -f
+docker-compose build
+docker-compose down
+
+https://github.com/Dgotlieb/DockerRedisPython/blob/master/app.py
+installation:
+sudo snap remove docker (uninstall old/problematic ver.)
+sudo apt install docker.io docker-compose
+
+INSTALL DOCKER:
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04
+Install docker-compose:
+https://www.digitalocean.com/community/tutorials/how-to-install-docker-compose-on-ubuntu-18-04
+
+
+
+
