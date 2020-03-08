@@ -1,0 +1,104 @@
+
+New repository:
+Go to the folder you want to start git:
+initialize a repo:
+mkdir git_project
+git init
+git config user.name “Yahelr”
+git config user.email yahel@myemail.com
+git status
+
+git ignore:
+create .gitignore file in the repository
+add inside *.exe (or other ignore files).
+Remote files from the cache:
+Git rm --cache file.exe
+register the file:
+git add .
+git commit -m "initical Commit
+git log
+git log -n 1
+git log -n 2
+git log –since=2019-08-24
+git log --author="yahel"
+git log --grep "word to search"
+git log --grep "word1" –grep “wprd2” –all-match
+
+
+Diff - check deference before file change and after:
+git diff (from working copy to index)
+or 
+git diff --cached  (from index to repository)
+git diff –staged
+check diff between two branches:
+git diff master..devbranch
+check previous version:
+git diff master..devbranch^
+----
+
+git rm - delete a file
+
+send to github:
+1. create a ripo named devops-samples in the github.com/yahelron
+
+2. git remote add origin git@github.com:yahelron/devops-samples.git
+3. git push -u origin master
+
+change branch:
+שיכפול הסביבה שימושי בזמן פיתוח פיצר חדש או תיקון באג.
+ככה הפרודקשן לא יושפע. לאחר הביצוע והבדיקות נאחד את השינויים חזרה למסטר.
+git branch new_feature
+git list of all branches (*  will be on the active branch):
+git branch
+ 
+to switch into another branch:
+git checkout <branch name>
+
+merge branch into the master:
+git merge new_feature
+if you have conflicts, fix them and then:
+git commit -a -m "fixed conflicts"
+
+Detached head:
+עבודה זמנית על משהו נקודתי בלי מעבר לברנץ חדש
+git checkout <commit id from the git log>
+ 
+במקרה שאנו במצב כזה ועל מנת לשמור את השינויים, חייבים לעבור לברנץ חדש ואז לבצע איחוד עם המסטר.
+Reset and revert:
+חזרה לגרסה מסויימת ומחיקה של כל הקומיטים מעל.
+Git reset --hard  85fds
+מחיקת קומיט ספציפי:
+Git revert <commit name/hash> 
+
+Remotes server:
+עבודה מול שרת מרכזי
+צור רפוזיטורי רק בגיט האב.
+בתקייה במחשב שלך כאשר הקוד נמצא שם:
+git commit -m "first commit"
+git remote add origin git@github.com:yahelron/jenkins-samples.git
+git push -u origin master
+
+בדיקה אם יש שינויים \עדכונים בשרת:
+git fetch origin
+
+
+
+git checkout – myfile.txt
+git reset HEAD myfile.txt
+
+Local git server:
+-	Set ssh key:
+-	Client:
+Ssh-keygen -t rsa -b 4096 -C yahel.ron@gmail.com
+ls -/.ssh (to view the key, id_rsa will be our private key)
+copy the key to the server:
+ssh-copy-id git@192.168.1.10 (or just add the pub key to server ./ssh/idrsa.pub to the server /.ssh/authorized_keys))
+to use it later:
+ssh git@192.168.1.10
+-	Change the git shell (man git-shell)
+
+Git tools:
+Etckeeper – git as a backup for linux
+GitKraken - גיט גרפי
+Gource – גיט גרפי
+Sparkleshare – like your own github
